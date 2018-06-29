@@ -3,15 +3,15 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
-  spec.name          = "mitamae-plugin-resource-ppa"
+  spec.name          = "mitamae-plugin-resource-apt-repository"
   spec.version       = "0.0.1"
   spec.authors       = ["Moritz Heiber"]
   spec.email         = ["github@heiber.im"]
 
-  spec.summary       = %q{mitamae plugin resource ppa}
-  spec.description   = %q{mitamae plugin resource ppa}
+  spec.summary       = %q{mitamae plugin resource apt_repository}
+  spec.description   = %q{mitamae plugin resource apt_repository}
   spec.license       = "MIT"
-  spec.homepage      = "https://github.com/moritzheiber/mitamae-plugin-resource-ppa"
+  spec.homepage      = "https://github.com/moritzheiber/mitamae-plugin-resource-apt-repository"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
   # delete this section to allow pushing this gem to any host.
