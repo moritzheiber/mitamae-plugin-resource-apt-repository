@@ -54,9 +54,12 @@ module ::MItamae
 
         def add_repository!
           run_command("apt-add-repository -y \'#{desired.url}\'") if desired.ppa
-          ::File.open(repo_filename(desired.url), 'w') do |file|
-            file.write(desired.url)
-          end unless desired.ppa
+          Proc.new do
+            ::File.open(repo_filename(desired.url), 'w') do |file|
+              file.write(desired.url)
+            end
+            update_cache
+          end.call unless desired.ppa
         end
 
         def remove_repository!
@@ -91,6 +94,10 @@ module ::MItamae
 
         def repository_exists?
           run_command("grep -o \'#{attributes.url.shellescape}\' /etc/apt/sources.list.d/*.list", error: false).exit_status == 0
+        end
+
+        def update_cache
+          run_command('apt update -qq')
         end
       end
     end
