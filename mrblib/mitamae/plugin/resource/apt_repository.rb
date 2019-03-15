@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ::MItamae
   module Plugin
     module Resource
@@ -8,7 +10,7 @@ module ::MItamae
         define_attribute :gpg_key, type: String
         define_attribute :keyserver, type: String, default: 'keyserver.ubuntu.com'
 
-        self.available_actions = [:add, :remove]
+        self.available_actions = %i[add remove]
       end
     end
   end

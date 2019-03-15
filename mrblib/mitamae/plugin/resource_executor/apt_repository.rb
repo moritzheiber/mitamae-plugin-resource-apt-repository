@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ::MItamae
   module Plugin
     module ResourceExecutor
@@ -10,9 +12,7 @@ module ::MItamae
             add_repository!
           end
 
-          unless desired.exists
-            remove_repository!
-          end
+          remove_repository! unless desired.exists
         end
 
         private
@@ -29,7 +29,7 @@ module ::MItamae
           end
         end
 
-        def set_current_attributes(current, action)
+        def set_current_attributes(current, _action)
           current.exists = run_specinfra(:check_ppa_is_enabled, attributes.url) if is_ppa?
           current.exists = repository_exists? unless is_ppa?
         end
@@ -54,12 +54,14 @@ module ::MItamae
 
         def add_repository!
           run_command("apt-add-repository -y \'#{desired.url}\'") if desired.ppa
-          Proc.new do
-            ::File.open(repo_filename(desired.url), 'w') do |file|
-              file.write(desired.url)
-            end
-            update_cache
-          end.call unless desired.ppa
+          unless desired.ppa
+            proc do
+              ::File.open(repo_filename(desired.url), 'w') do |file|
+                file.write(desired.url)
+              end
+              update_cache
+            end.call
+          end
         end
 
         def remove_repository!
@@ -69,8 +71,9 @@ module ::MItamae
 
         def repo_filename(url)
           location, distribution, component = url.match(
-            /https?:\/\/([^\s]*).{1}([^\s]*).{1}([^\s]*)/)
-            .captures.map {|part| part.gsub(/[\.\/]/, '_') }
+            /https?:\/\/([^\s]*).{1}([^\s]*).{1}([^\s]*)/
+          )
+                                                 .captures.map { |part| part.gsub(/[\.\/]/, '_') }
 
           "/etc/apt/sources.list.d/#{location}_#{distribution}_#{component}.list"
         end
